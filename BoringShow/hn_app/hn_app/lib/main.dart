@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'src/article.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,13 +28,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  List<Article> _articles = articles;
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +36,41 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () {
+//          Scaffold.of(context).showSnackBar(SnackBar(content: Text("Refreshed")));
+          return Future.delayed(const Duration(seconds: 1));
+        },
+        child: ListView(
+          children: _articles.map(_buildItem).toList(),
         ),
+      ),
+    );
+  }
+
+  Widget _buildItem(Article article){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        title: Text(article.text, style: TextStyle(fontSize: 24.0, ),),
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text("${article.commentsCount} comments"),
+              IconButton(
+                icon: Icon(Icons.launch),
+                onPressed: () async {
+                  final fakeUrl = "http://${article.domain}";
+                  if(await canLaunch(fakeUrl)){
+                    launch(fakeUrl);
+                  }
+                },
+                color: Colors.blue,
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
