@@ -13,6 +13,7 @@ class Article {
         this.age,
         this.score,
         this.commentsCount});
+
 }
 
 final articles = [

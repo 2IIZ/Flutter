@@ -37,9 +37,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: RefreshIndicator(
-        onRefresh: () {
+        onRefresh: () async {
 //          Scaffold.of(context).showSnackBar(SnackBar(content: Text("Refreshed")));
-          return Future.delayed(const Duration(seconds: 1));
+          await Future.delayed(const Duration(seconds: 1));
+          setState(() {
+            _articles.removeAt(0);
+          });
         },
         child: ListView(
           children: _articles.map(_buildItem).toList(),
@@ -50,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildItem(Article article){
     return Padding(
+      key: Key(article.text),
       padding: const EdgeInsets.all(8.0),
       child: ExpansionTile(
         title: Text(article.text, style: TextStyle(fontSize: 24.0, ),),
