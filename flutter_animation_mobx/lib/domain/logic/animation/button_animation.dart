@@ -35,7 +35,6 @@ abstract class _ButtonAnimation with Store {
   @observable
   Color? buttonColor = Colors.deepPurpleAccent;
 
-  @observable
   Color lastButtonColor = Colors.deepPurpleAccent;
 
   void changeColor() {
