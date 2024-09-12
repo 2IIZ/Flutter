@@ -30,24 +30,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  late AnimationController animationController;
-  late final Animation<double> _buttonZoomAnimation = CurvedAnimation(
-    parent: animationController,
-    curve: Curves.fastOutSlowIn,
-  );
-
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(
+    buttonAnimation.controller = AnimationController(
       value: buttonAnimation.buttonScale,
       lowerBound: 0.7,
       upperBound: 1,
-      duration: Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    animationController.addListener(() {
-      buttonAnimation.buttonScale = animationController.value;
+    buttonAnimation.controller.addListener(() {
+      buttonAnimation.buttonScale = buttonAnimation.controller.value;
     });
   }
 
@@ -79,17 +73,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ),
       floatingActionButton: Observer(builder: (context) {
         return ScaleTransition(
-          scale: _buttonZoomAnimation,
+          scale: buttonAnimation.buttonZoomAnimation,
           child: FloatingActionButton(
             onPressed: () {
-              // Reset to 1.0 and then animate down to 0.8 and to 1.0 again.
-              // Simulates the press of a button
               HapticFeedback.selectionClick();
-              animationController.forward(from: 1.0).then((_) {
-                animationController.reverse().then((_) {
-                  animationController.forward();
-                });
-              });
+              buttonAnimation.scaleAnimation();
               counter.increment();
             },
             tooltip: 'Increment',
