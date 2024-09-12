@@ -25,10 +25,44 @@ mixin _$ButtonAnimation on _ButtonAnimation, Store {
     });
   }
 
+  late final _$buttonColorAtom =
+      Atom(name: '_ButtonAnimation.buttonColor', context: context);
+
+  @override
+  Color? get buttonColor {
+    _$buttonColorAtom.reportRead();
+    return super.buttonColor;
+  }
+
+  @override
+  set buttonColor(Color? value) {
+    _$buttonColorAtom.reportWrite(value, super.buttonColor, () {
+      super.buttonColor = value;
+    });
+  }
+
+  late final _$lastButtonColorAtom =
+      Atom(name: '_ButtonAnimation.lastButtonColor', context: context);
+
+  @override
+  Color get lastButtonColor {
+    _$lastButtonColorAtom.reportRead();
+    return super.lastButtonColor;
+  }
+
+  @override
+  set lastButtonColor(Color value) {
+    _$lastButtonColorAtom.reportWrite(value, super.lastButtonColor, () {
+      super.lastButtonColor = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
-buttonScale: ${buttonScale}
+buttonScale: ${buttonScale},
+buttonColor: ${buttonColor},
+lastButtonColor: ${lastButtonColor}
     ''';
   }
 }

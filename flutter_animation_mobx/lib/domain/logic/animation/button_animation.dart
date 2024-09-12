@@ -1,4 +1,6 @@
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animation_mobx/common/color_math.dart';
 import 'package:mobx/mobx.dart';
 
 // include the "part" directive.
@@ -25,5 +27,19 @@ abstract class _ButtonAnimation with Store {
         controller.forward();
       });
     });
+  }
+
+  late Animation<Color?> buttonColorAnimation;
+  @observable
+  Color? buttonColor = Colors.deepPurpleAccent;
+
+  @observable
+  Color lastButtonColor = Colors.deepPurpleAccent;
+
+  void changeColor() {
+    buttonColorAnimation =
+        ColorTween(begin: lastButtonColor, end: ColorMath.getRandomColor())
+            .animate(controller);
+    lastButtonColor = ColorMath.getRandomColor();
   }
 }
