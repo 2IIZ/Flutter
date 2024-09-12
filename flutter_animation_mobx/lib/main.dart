@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animation_mobx/common/color_math.dart';
 import 'package:flutter_animation_mobx/domain/logic/animation/button_animation.dart';
+import 'package:flutter_animation_mobx/domain/logic/animation/counter_animation.dart';
 import 'package:flutter_animation_mobx/domain/logic/counter/counter.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 final counter = Counter(); // Instantiate the store
 final buttonAnimation = ButtonAnimation();
+final counterAnimation = CounterAnimation();
 
 void main() => runApp(MyApp());
 
@@ -45,6 +47,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       buttonAnimation.buttonScale = buttonAnimation.controller.value;
       buttonAnimation.buttonColor = buttonAnimation.buttonColorAnimation.value;
     });
+    counterAnimation.controller = AnimationController(
+      value: counterAnimation.counterScale,
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    counterAnimation.controller.addListener(() {
+      counterAnimation.counterScale =
+          counterAnimation.counterScaleAnimation.value;
+    });
   }
 
   @override
@@ -60,19 +71,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             Text(
               'You have pushed the button this many times:',
             ),
-            // TODO animate bigger each time it goes one step
             Observer(
-              builder: (_) => ScaleTransition(
-                scale: ,
+              builder: (_) => Transform.scale(
+                scale: counterAnimation.counterScale,
                 child: Text(
                   '${counter.value}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
             ),
-            Observer(builder: (_) {
-              return Text('animation value : ${buttonAnimation.buttonScale}');
-            })
           ],
         ),
       ),
@@ -86,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               HapticFeedback.selectionClick();
               buttonAnimation.scaleAnimation();
               buttonAnimation.changeColor();
+              counterAnimation.scaleIncrement();
               counter.increment();
             },
             tooltip: 'Increment',

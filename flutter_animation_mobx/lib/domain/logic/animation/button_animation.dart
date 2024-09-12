@@ -29,7 +29,9 @@ abstract class _ButtonAnimation with Store {
     });
   }
 
-  late Animation<Color?> buttonColorAnimation;
+  late Animation<Color?> buttonColorAnimation =
+      ColorTween(begin: lastButtonColor, end: ColorMath.getRandomColor())
+          .animate(controller);
   @observable
   Color? buttonColor = Colors.deepPurpleAccent;
 
@@ -37,9 +39,10 @@ abstract class _ButtonAnimation with Store {
   Color lastButtonColor = Colors.deepPurpleAccent;
 
   void changeColor() {
+    final tempRandomColor = ColorMath.getRandomColor();
     buttonColorAnimation =
-        ColorTween(begin: lastButtonColor, end: ColorMath.getRandomColor())
+        ColorTween(begin: lastButtonColor, end: tempRandomColor)
             .animate(controller);
-    lastButtonColor = ColorMath.getRandomColor();
+    lastButtonColor = tempRandomColor;
   }
 }
